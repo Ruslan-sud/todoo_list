@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../add/add_page.dart';
+import '../settings/settings_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -9,12 +10,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   List<String> tasks = [];
 
   Future _navigateToAddPage() async {
+
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const AddPage()),
+      MaterialPageRoute(
+        builder: (_) => const AddPage(),
+      ),
     );
 
     if (result != null && result != "") {
@@ -22,18 +27,40 @@ class _MyHomePageState extends State<MyHomePage> {
         tasks.insert(0, result);
       });
     }
+
+  }
+
+  void _openSettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const SettingsPage(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
       appBar: AppBar(
         title: const Text(
           "Мои задачи",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+          style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
+
+        actions: [
+          IconButton(
+            onPressed: _openSettings,
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.black,
+            ),
+          )
+        ],
       ),
 
       body: Padding(
@@ -42,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView.builder(
           itemCount: tasks.length,
           itemBuilder: (context, index) {
+
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
 
@@ -54,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               child: Row(
                 children: [
+
                   Container(
                     width: 22,
                     height: 22,
@@ -68,17 +97,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: Text(
                       tasks[index],
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
 
                   const Text(
                     "14.09.26",
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                    ),
                   ),
+
                 ],
               ),
             );
+
           },
         ),
       ),
@@ -90,15 +127,20 @@ class _MyHomePageState extends State<MyHomePage> {
           height: 50,
 
           child: ElevatedButton.icon(
+
             onPressed: _navigateToAddPage,
 
-            icon: const Icon(Icons.add),
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
 
             label: const Text("Добавить задачу"),
 
             style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
               backgroundColor: const Color(0xff1976D2),
+              foregroundColor: Colors.white,
+
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -106,6 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+
     );
+
   }
 }
