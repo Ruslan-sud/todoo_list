@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'add_view_model.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -8,68 +9,82 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  TextEditingController controller = TextEditingController();
+  final TextEditingController controller = TextEditingController();
+  final AddViewModel viewModel = AddViewModel();
 
-  void _saveTask() {
-    Navigator.pop(context, controller.text);
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Новая задача",
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        centerTitle: true,
+        title: const Text("Добавить задачу"),
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: AnimatedBuilder(
+        animation: viewModel,
+        builder: (context, _) {
+          final state = viewModel.state;
 
-        child: Column(
-          children: [
-            TextField(
-              controller: controller,
-
-              decoration: InputDecoration(
-                hintText: "введите название задачи",
-
-                filled: true,
-
-                fillColor: Colors.grey.shade200,
-
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-
-            const Spacer(),
-
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-
-              child: ElevatedButton(
-                onPressed: _saveTask,
-
-                child: const Text("Сохранить"),
-
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff1976D2),
-                  foregroundColor: Colors.white,
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Введите задачу",
                   ),
                 ),
-              ),
+
+                const SizedBox(height: 20),
+
+                
+                if (!state.isInitial && !state.isSucceed)
+                  const Text(
+                    "Введите название",
+                    style: TextStyle(color: Colors.red),
+                  ),
+
+                
+                if (!state.isInitial && state.isSucceed)
+                  const Text(
+                    "Сохранено!",
+                    style: TextStyle(color: Colors.green),
+                  ),
+
+                const Spacer(),
+
+                SizedBox(
+                  height: 50,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      viewModel.submit(controller.text);
+
+                      if (controller.text.isNotEmpty) {
+                        Navigator.pop(context, controller.text);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff1976D2),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text("Сохранить"),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
