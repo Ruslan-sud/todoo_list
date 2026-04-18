@@ -21,9 +21,7 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Добавить задачу"),
-      ),
+      appBar: AppBar(title: const Text("Добавить задачу")),
 
       body: AnimatedBuilder(
         animation: viewModel,
@@ -44,14 +42,12 @@ class _AddPageState extends State<AddPage> {
 
                 const SizedBox(height: 20),
 
-                
                 if (!state.isInitial && !state.isSucceed)
                   const Text(
                     "Введите название",
                     style: TextStyle(color: Colors.red),
                   ),
 
-                
                 if (!state.isInitial && state.isSucceed)
                   const Text(
                     "Сохранено!",
@@ -64,10 +60,12 @@ class _AddPageState extends State<AddPage> {
                   height: 50,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       viewModel.submit(controller.text);
 
                       if (controller.text.isNotEmpty) {
+                        await Future.delayed(const Duration(seconds: 1));
+
                         Navigator.pop(context, controller.text);
                       }
                     },

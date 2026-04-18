@@ -57,7 +57,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
             children: [
 
-              /// ТЕКСТ СЛЕВА
               Expanded(
                 child: Column(
                   crossAxisAlignment:
@@ -92,7 +91,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
 
-              /// SWITCH СПРАВА
               Switch(
                 value: isDark,
 
